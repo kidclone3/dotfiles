@@ -8,3 +8,4 @@ rofi \
 	-terminal terminator \
 	-kb-cancel Escape \
 	-theme "$HOME"/.config/rofi/config/launcher.rasi
+	# -theme "$HOME"/.config/rofi/config.rasi
