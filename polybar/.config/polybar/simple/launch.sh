@@ -11,7 +11,7 @@ launch_bar() {
 	while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 
 	# Launch the bar
-	for m in $(xrandr --listactivemonitors | grep 'DP\|HDMI' | rev | cut -d ' ' -f1 | rev); do
+	for m in $(polybar -m | cut -d ':' -f 1); do
 		if [[ "$style" == "hack" || "$style" == "cuts" ]]; then
 			MONITOR=$m polybar -q top -c "$dir/$style/config.ini" &
 			MONITOR=$m polybar -q bottom -c "$dir/$style/config.ini" &
