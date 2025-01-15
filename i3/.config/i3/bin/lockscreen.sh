@@ -13,7 +13,7 @@ blue='#6272a4'
 cyan='#8be9fd'
 green='50fa7b'
 
-betterlockscreen -l dim
+betterlockscreen -l dim --off 60
   # --insidever-color=$selection$alpha \
   # --insidewrong-color=$selection$alpha \
   # --inside-color=$selection$alpha \
