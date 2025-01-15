@@ -26,20 +26,20 @@ else
 		suspend="󰤄  Sleep"
 		logout="󰗽  Logout"
   # Section 2
-#		shutdown="襤"
-#		reboot="ﰇ"
-#		lock=""
-#		suspend="鈴"
-#		logout=" "
+		# shutdown="襤"
+		# reboot="ﰇ"
+		# lock=""
+		# suspend="鈴"
+		# logout=" "
 
 
 	else
   # Section 1
-                shutdown="    Shutdown"
-                reboot="    Restart"
-                lock="󰌾   Lock"
-                suspend="󰤄   Sleep"
-                logout="󰗽   Logout"
+                shutdown="  Shutdown"
+                reboot="  Restart"
+                lock="󰌾  Lock"
+                suspend="󰤄  Sleep"
+                logout="󰗽  Logout"
   # Section 2
 #		shutdown="襤Shutdown"
 #		reboot="ﰇ Restart"

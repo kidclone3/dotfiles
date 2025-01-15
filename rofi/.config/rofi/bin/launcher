@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 export XDG_DATA_DIRS="${XDG_DATA_DIRS}:/usr/local/share:/usr/share:/var/lib/flatpak/exports/share"
-rofi -show drun \
+rofi -modi combi -show drun,calc \
 	-scroll-method 0 \
 	-drun-match-fields all \
 	-drun-display-format "{name}" \
