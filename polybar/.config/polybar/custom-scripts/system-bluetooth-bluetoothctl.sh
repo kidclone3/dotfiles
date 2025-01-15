@@ -17,15 +17,15 @@ bluetooth_print() {
 
                     if [ -n "$device_battery_percent" ]; then
                         if [ "$device_battery_percent" -gt 90 ]; then
-                            device_battery_icon="#25"
+                            device_battery_icon=""
                         elif [ "$device_battery_percent" -gt 60 ]; then
-                            device_battery_icon="#24"
+                            device_battery_icon=""
                         elif [ "$device_battery_percent" -gt 35 ]; then
-                            device_battery_icon="#23"
+                            device_battery_icon=""
                         elif [ "$device_battery_percent" -gt 10 ]; then
-                            device_battery_icon="#22"
+                            device_battery_icon=""
                         else
-                            device_battery_icon="#21"
+                            device_battery_icon=""
                         fi
 
                         device_output="$device_output $device_battery_icon $device_battery_percent%"
