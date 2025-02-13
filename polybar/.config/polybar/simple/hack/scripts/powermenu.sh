@@ -35,6 +35,9 @@ msg() {
 # Variable passed to rofi
 options="$lock\n$suspend\n$logout\n$reboot\n$shutdown"
 
+# Store layout
+~/.config/i3/bin/store-layout.sh save
+
 chosen="$(echo -e "$options" | $rofi_command -p "Uptime: $uptime" -dmenu -selected-row 0)"
 case $chosen in
     $shutdown)
@@ -58,11 +61,11 @@ case $chosen in
         fi
         ;;
     $lock)
-		if [[ -f /usr/bin/i3lock ]]; then
-			~/.config/i3/bin/lockscreen.sh
-		elif [[ -f /usr/bin/betterlockscreen ]]; then
-			betterlockscreen -l
-		fi
+		~/.config/i3/bin/lockscreen.sh
+		# if [[ -f /usr/bin/i3lock ]]; then
+		# elif [[ -f /usr/bin/betterlockscreen ]]; then
+		# 	betterlockscreen -l
+		# fi
         ;;
     $suspend)
 		ans=$(confirm_exit &)
