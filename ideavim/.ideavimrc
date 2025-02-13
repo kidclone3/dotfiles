@@ -1,0 +1,39 @@
+set relativenumber number
+set surround
+"set mouse=a
+
+
+set clipboard+=unnamed
+set ideajoin
+
+"Select and move lines"
+nnoremap J :m .+1<CR>==
+nnoremap K :m .-2<CR>==
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" I like using H and L for beginning/end of line
+nmap H ^
+nmap L $
+
+"Highlight yank"
+set highlightedyank
+let g:highlightedyank_highlight_color = "rgba(160, 160, 160, 155)"
+let g:highlightedyank_highlight_duration = 500
+
+" Indent selected lines and keep selection"
+vnoremap > >gv
+vnoremap < <gv
+
+"Escape"
+inoremap jk <Esc>
+
+set multiple-cursors
+
+Plug 'easymotion/vim-easymotion'
+
+" Better window navigation"
+nnoremap <C-j> <C-W>j
+nnoremap <C-k> <C-W>k
+nnoremap <C-h> <C-W>h
+nnoremap <C-l> <C-W>l
