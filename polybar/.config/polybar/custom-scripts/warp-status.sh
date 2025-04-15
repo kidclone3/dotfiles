@@ -1,6 +1,6 @@
 #!/bin/bash
 warp_toggle() {
-    if warp-cli status | grep -q "Connected"; then
+    if warp-cli status | grep -q "Connected\|Connecting"; then
         warp-cli disconnect
         wait
         notify-send "Warp" "🌥  turned off"
@@ -9,14 +9,11 @@ warp_toggle() {
         wait
         notify-send "Warp" "🌥  turned on"
     fi
+    warp_print # Print the new status
 }
 
 warp_print() {
-    if warp-cli status | grep -q "Connected"; then
-        printf 'Warp:  On '
-    else
-        printf 'Warp:  Off '
-    fi
+    printf "Warp: %s" "$(warp-cli status | awk 'NR==1 {print $3}')"
     printf '\n'
 }
 
