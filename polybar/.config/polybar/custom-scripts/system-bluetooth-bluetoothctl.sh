@@ -14,6 +14,8 @@ bluetooth_print() {
 
                 if echo "$device_info" | grep -q "a2dp_sink"; then
                     device_output=$(echo "$device_info" | grep "device.description = " | cut -d ' ' -f 3- | tr -d '"')
+                    # Wait 2s to get the battery info
+                    sleep 2
                     device_battery_percent=$(echo "$device_info" | grep "bluetooth.battery" | awk -F'[=]' '{print $2}' | tr -d ' %')
                     device_battery_percent=$(printf "%d" "$device_battery_percent")
                     if [ -n "$device_battery_percent" ]; then
