@@ -17,11 +17,14 @@ set $mod Mod4
 # font pango:UbuntuMono Nerd Font 8
 font pango:DejaVu Sans Mono 8
 
+# Use fcitx5
+exec --no-startup-id fcitx5
+
 # Use picom to avoid screen tearing
 exec_always --no-startup-id picom
 
 # Use albert as a launcher
-exec_always --no-startup-id albert
+exec_always --no-startup-id /usr/bin/albert
 
 # kill any hanging polybar processes
 exec_always killall polybar
@@ -37,7 +40,7 @@ exec --no-startup-id dex --autostart --environment i3
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec_always --no-startup-id xss-lock --transfer-sleep-lock -- betterlockscreen -l dim --off 60
+exec_always --no-startup-id xss-lock --transfer-sleep-lock -- betterlockscreen -l dim --off 10
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -103,8 +106,11 @@ bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
+# Toggle between last split layout/tabbed/stacking
+bindsym $mod+x layout toggle split tabbed stacking
+
 # toggle tiling / floating
-# bindsym $mod+Shift+space floating toggle
+bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
 # bindsym $mod+space focus mode_toggle
