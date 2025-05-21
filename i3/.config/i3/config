@@ -25,7 +25,7 @@ exec_always --no-startup-id picom
 
 # Use albert as a launcher
 exec_always --no-startup-id /usr/bin/albert
-exec_always --no-startup-id alttab -w 1 -d 1
+exec_always --no-startup-id alttab -w 1 -d 1 -s 1
 
 # kill any hanging polybar processes
 exec_always killall polybar
@@ -122,6 +122,8 @@ bindsym $mod+Shift+space floating toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
+
+bindsym $mod+button2 kill
 
 # focus the child container
 #bindsym $mod+d focus child
