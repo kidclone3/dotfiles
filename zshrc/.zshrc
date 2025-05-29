@@ -117,9 +117,9 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # itsmeit - config Vietnamese (Unikey)
-export GTK_IM_MODULE=ibus
-export XMODIFIERS=@im=ibus
-export QT_IM_MODULE=ibus
+# export GTK_IM_MODULE=ibus
+# export XMODIFIERS=@im=ibus
+# export QT_IM_MODULE=ibus
 alias cdc=~/Documents/code
 alias pc=pycharm
 
@@ -173,3 +173,7 @@ PERL5LIB="/home/delus/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB
 PERL_LOCAL_LIB_ROOT="/home/delus/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/home/delus/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/delus/perl5"; export PERL_MM_OPT;
+
+
+# use node version
+nvm use v20.18.0 &> /dev/null
