@@ -83,6 +83,7 @@ plugins=(
 	git 
 	zsh-syntax-highlighting
 	zsh-autosuggestions
+	zsh-autocomplete
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -177,3 +178,7 @@ PERL_MM_OPT="INSTALL_BASE=/home/delus/perl5"; export PERL_MM_OPT;
 
 # use node version
 nvm use v20.18.0 &> /dev/null
+
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+# Load custom zsh configuration
+. ~/.custom.zshrc

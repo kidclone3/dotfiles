@@ -1,0 +1,1 @@
+export ZSH_CUSTOM=/home/delus/Documents/tools/dotfiles/oh-my-zsh/.oh-my-zsh/custom
