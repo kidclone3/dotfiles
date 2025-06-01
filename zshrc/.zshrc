@@ -122,18 +122,6 @@ source $ZSH/oh-my-zsh.sh
 # export XMODIFIERS=@im=ibus
 # export QT_IM_MODULE=ibus
 
-# ===================================================================
-# ALIASES CONFIGURATION
-# ===================================================================
-
-# Directory Navigation Aliases
-alias cdc=~/Documents/code
-
-# Development Tools Aliases  
-alias pc=pycharm
-
-# Python Development Aliases
-alias mkpydir='function _mkpydir() { mkdir -p "$1" && touch "$1/__init__.py"; }; _mkpydir'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -169,7 +157,7 @@ function warp_func() {
 	fi
 }
 alias warp='warp_func'
-. "/home/delus/.deno/env"
+# . "/home/delus/.deno/env"
 # pnpm
 export PNPM_HOME="/home/delus/snap/code/174/.local/share/pnpm"
 case ":$PATH:" in
