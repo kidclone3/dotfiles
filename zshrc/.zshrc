@@ -121,8 +121,19 @@ source $ZSH/oh-my-zsh.sh
 # export GTK_IM_MODULE=ibus
 # export XMODIFIERS=@im=ibus
 # export QT_IM_MODULE=ibus
+
+# ===================================================================
+# ALIASES CONFIGURATION
+# ===================================================================
+
+# Directory Navigation Aliases
 alias cdc=~/Documents/code
+
+# Development Tools Aliases  
 alias pc=pycharm
+
+# Python Development Aliases
+alias mkpydir='function _mkpydir() { mkdir -p "$1" && touch "$1/__init__.py"; }; _mkpydir'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -141,7 +152,11 @@ eval "$(pyenv init -)"
 # eval "$(pyenv virtualenv-init -)"
 
 
-# Binding for warp-cli
+# ===================================================================
+# CUSTOM FUNCTIONS AND FUNCTION ALIASES
+# ===================================================================
+
+# Warp VPN Toggle Function and Alias
 RED='\033[0;31m'
 function warp_func() {
 	if warp-cli status | grep -q "Disconnected";
