@@ -121,8 +121,7 @@ source $ZSH/oh-my-zsh.sh
 # export GTK_IM_MODULE=ibus
 # export XMODIFIERS=@im=ibus
 # export QT_IM_MODULE=ibus
-alias cdc=~/Documents/code
-alias pc=pycharm
+
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -141,7 +140,11 @@ eval "$(pyenv init -)"
 # eval "$(pyenv virtualenv-init -)"
 
 
-# Binding for warp-cli
+# ===================================================================
+# CUSTOM FUNCTIONS AND FUNCTION ALIASES
+# ===================================================================
+
+# Warp VPN Toggle Function and Alias
 RED='\033[0;31m'
 function warp_func() {
 	if warp-cli status | grep -q "Disconnected";
@@ -154,7 +157,7 @@ function warp_func() {
 	fi
 }
 alias warp='warp_func'
-. "/home/delus/.deno/env"
+# . "/home/delus/.deno/env"
 # pnpm
 export PNPM_HOME="/home/delus/snap/code/174/.local/share/pnpm"
 case ":$PATH:" in
