@@ -84,7 +84,11 @@ plugins=(
 	zsh-syntax-highlighting
 	zsh-autosuggestions
 	zsh-autocomplete
+	fzf
 )
+
+# FZF configuration
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 
 source $ZSH/oh-my-zsh.sh
 
