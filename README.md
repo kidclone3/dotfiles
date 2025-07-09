@@ -4,7 +4,7 @@
 
 1. Clone with submodules:
 ```bash
-git clone --recurse-submodules https://github.com/yourusername/dotfiles.git
+git clone --recurse-submodules https://github.com/kidclone3/dotfiles.git
 ```
 
 Or if you already cloned:
