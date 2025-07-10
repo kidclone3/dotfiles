@@ -188,7 +188,13 @@ nvm use v20.18.0 &> /dev/null
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 # Load custom zsh configuration
 . ~/.custom.zshrc
+# bun completions
+[ -s "/home/delus/.bun/_bun" ] && source "/home/delus/.bun/_bun"
 
-export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgtk3-nocsd.so.0${LD_PRELOAD:+:$LD_PRELOAD}
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+eval "$(pyenv virtualenv-init -)"
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
