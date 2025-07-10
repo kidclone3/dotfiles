@@ -83,7 +83,6 @@ plugins=(
 	git 
 	zsh-syntax-highlighting
 	zsh-autosuggestions
-	zsh-autocomplete
 	fzf
 )
 
@@ -189,3 +188,7 @@ nvm use v20.18.0 &> /dev/null
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 # Load custom zsh configuration
 . ~/.custom.zshrc
+
+export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgtk3-nocsd.so.0${LD_PRELOAD:+:$LD_PRELOAD}
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

@@ -40,6 +40,6 @@ if exists('g:vscode')
   nnoremap <leader>t :call VSCodeNotify('testing.runAtCursor')<CR>
   nnoremap <leader>T :call VSCodeNotify('testing.runCurrentFile')<CR>
 
-  lua require('folding')
+  lua dofile(vim.fn.expand('<sfile>:p:h') .. '/folding.lua')
 endif
 
