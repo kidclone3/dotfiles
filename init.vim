@@ -1,5 +1,6 @@
 if exists('g:vscode')
   " Visual mode indenting stays in visual
+  set clipboard=unnamedplus
   let mapleader = " "
   vnoremap < <gv
   vnoremap > >gv
@@ -38,4 +39,7 @@ if exists('g:vscode')
   nnoremap <leader>c :call VSCodeNotify('workbench.action.closeActiveEditor')<CR>
   nnoremap <leader>t :call VSCodeNotify('testing.runAtCursor')<CR>
   nnoremap <leader>T :call VSCodeNotify('testing.runCurrentFile')<CR>
+
+  lua dofile(vim.fn.expand('<sfile>:p:h') .. '/folding.lua')
 endif
+
