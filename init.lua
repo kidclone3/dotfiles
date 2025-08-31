@@ -24,9 +24,16 @@ if vim.g.vscode then
   }
 
   local keymap = vim.keymap.set
+  local nvim_keymap = vim.api.nvim_set_keymap
 
   local opts_silent = { silent = true }
   local opts_nonrecursive = { noremap = true, silent = true }
+
+  local vscode = require('vscode')
+
+  local function vscodemap(mode, lhs, rhs)
+    vim.keymap.set(mode, lhs, function() vscode.call(rhs) end, { silent = true, noremap = true })
+  end
 
 
   -- yank to system clipboard
@@ -47,34 +54,42 @@ if vim.g.vscode then
   keymap("i", "jk", "<esc>", opts_nonrecursive)
 
   -- Normal mode: leader mappings
-  keymap("n", "<leader>/", ":call VSCodeNotify('editor.action.commentLine')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>h", ":call VSCodeNotify('workbench.action.focusLeftGroup')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>j", ":call VSCodeNotify('workbench.action.focusBelowGroup')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>k", ":call VSCodeNotify('workbench.action.focusAboveGroup')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>l", ":call VSCodeNotify('workbench.action.focusRightGroup')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>ne", ":call VSCodeNotify('workbench.explorer.fileView.focus')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>w", ":call VSCodeNotify('workbench.action.file.save')<CR>", opts_nonrecursive)
-  keymap("n", "gh", ":call VSCodeNotify('editor.action.showDefinitionPreviewHover')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>1", ":call VSCodeNotify('workbench.action.openEditorAtIndex1')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>2", ":call VSCodeNotify('workbench.action.openEditorAtIndex2')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>3", ":call VSCodeNotify('workbench.action.openEditorAtIndex3')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>f", ":call VSCodeNotify('workbench.action.findInFiles')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>s", ":call VSCodeNotify('workbench.action.showAllSymbols')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>r", ":call VSCodeNotify('editor.action.startFindReplaceAction')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>e", ":call VSCodeNotify('workbench.view.explorer')<CR>", opts_nonrecursive)
-  keymap("n", "<leader>c", ":call VSCodeNotify('workbench.action.closeActiveEditor')<CR>", opts_nonrecursive)
+  vscodemap("n", "<leader>/", "editor.action.commentLine")
+  vscodemap("n", "<leader>h", "workbench.action.focusLeftGroup")
+  vscodemap("n", "<leader>j", "workbench.action.focusBelowGroup")
+  vscodemap("n", "<leader>k", "workbench.action.focusAboveGroup")
+  vscodemap("n", "<leader>l", "workbench.action.focusRightGroup")
+  vscodemap("n", "<leader>ne", "workbench.explorer.fileView.focus")
+  vscodemap("n", "<leader>w", "workbench.action.file.save")
+  vscodemap("n", "gh", "editor.action.showDefinitionPreviewHover")
+
+  vscodemap("n", "<leader>f", "workbench.action.findInFiles")
+  vscodemap("n", "<leader>s", "workbench.action.showAllSymbols")
+  vscodemap("n", "<leader>r", "editor.action.startFindReplaceAction")
+  vscodemap("n", "<leader>e", "workbench.view.explorer")
+  vscodemap("n", "<leader>c", "workbench.action.closeActiveEditor")
+
+
   -- Tab navigation
-  keymap("n", "H", ":call VSCodeNotify('workbench.action.previousEditor')<CR>", opts_nonrecursive)
-  keymap("n", "L", ":call VSCodeNotify('workbench.action.nextEditor')<CR>", opts_nonrecursive)
+  -- keymap("n", "H", ":call VSCodeNotify('workbench.action.previousEditor')<CR>", opts_nonrecursive)
+  -- keymap("n", "L", ":call VSCodeNotify('workbench.action.nextEditor')<CR>", opts_nonrecursive)
+  vscodemap("n", "H", "workbench.action.previousEditor")
+  vscodemap("n", "L", "workbench.action.nextEditor")
 
   -- Split navigation
-  keymap("n", "|", ":vsplit<CR>", opts_nonrecursive)
-  keymap("n", "_", ":split<CR>", opts_nonrecursive)
-  -- keymap("n", "Q", ":call VSCodeNotify('workbench.action.closeActiveEditor')<CR>", opts_nonrecursive)
-  keymap("n", "Q", ":q<CR>", opts_nonrecursive)
+  -- keymap("n", "|", ":vsplit<CR>", opts_nonrecursive)
+  -- nvim_keymap("n", "|", ":vsplit<CR>", opts_nonrecursive)
+  vscodemap("n", "|", "workbench.action.splitEditor")
+  -- keymap("n", "_", ":split<CR>", opts_nonrecursive)
+  vscodemap("n", "_", "workbench.action.splitEditorOrthogonal")
+  keymap("n", "Q", ":call VSCodeNotify('workbench.action.closeActiveEditor')<CR>", opts_nonrecursive)
+  -- keymap("n", "Q", ":q<CR>", opts_nonrecursive)
   keymap("n", "<Esc>", "<Esc>:noh<CR>", opts_nonrecursive) 
 
   -- Load folding.lua from same directory as init.lua
   dofile(vim.fn.expand('<sfile>:p:h') .. '/folding.lua')
 
 end
+
+
+
