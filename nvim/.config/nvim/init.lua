@@ -82,6 +82,19 @@ if vim.g.vscode then
   vscodemap({"n", "v"}, "<S-Tab>", "workbench.action.previousEditor")
   keymap("n", "<Esc>", "<Esc>:noh<CR>", opts_nonrecursive) 
 
+
+ -- LSP
+  vscodemap("n", "[d", "editor.action.marker.prev")
+  vscodemap("n", "]d", "editor.action.marker.next")
+  vscodemap("n", "gd", "editor.action.revealDefinition")
+  vscodemap("n", "gr", "editor.action.referenceSearch.trigger")
+  vscodemap("n", "gI", "editor.action.goToImplementation")
+  vscodemap("n", "gt", "editor.action.goToTypeDefinition")
+  vscodemap("n", "gh", "editor.action.showDefinitionPreviewHover")
+
+  -- Toggle inline chat
+  vscodemap("v", "<C-i>", "inlineChat.start")
+
   -- Load folding.lua from same directory as init.lua
   dofile(vim.fn.expand('<sfile>:p:h') .. '/folding.lua')
 
