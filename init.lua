@@ -1,3 +1,5 @@
+-- require("config.lazy")
+
 -- Check for VSCode Neovim extension environment
 if vim.g.vscode then
   -- Clipboard
@@ -61,7 +63,6 @@ if vim.g.vscode then
   vscodemap("n", "<leader>l", "workbench.action.focusRightGroup")
   vscodemap("n", "<leader>ne", "workbench.explorer.fileView.focus")
   vscodemap("n", "<leader>w", "workbench.action.file.save")
-  vscodemap("n", "gh", "editor.action.showDefinitionPreviewHover")
 
   vscodemap("n", "<leader>f", "workbench.action.findInFiles")
   vscodemap("n", "<leader>s", "workbench.action.showAllSymbols")
@@ -69,27 +70,112 @@ if vim.g.vscode then
   vscodemap("n", "<leader>e", "workbench.view.explorer")
   vscodemap("n", "<leader>c", "workbench.action.closeActiveEditor")
 
+  -- Toggle copilot inline suggestions
+  vscodemap("n", "<C-i>", "editor.action.inlineSuggest.trigger")
 
   -- Tab navigation
-  -- keymap("n", "H", ":call VSCodeNotify('workbench.action.previousEditor')<CR>", opts_nonrecursive)
-  -- keymap("n", "L", ":call VSCodeNotify('workbench.action.nextEditor')<CR>", opts_nonrecursive)
   vscodemap("n", "H", "workbench.action.previousEditor")
   vscodemap("n", "L", "workbench.action.nextEditor")
 
   -- Split navigation
-  -- keymap("n", "|", ":vsplit<CR>", opts_nonrecursive)
-  -- nvim_keymap("n", "|", ":vsplit<CR>", opts_nonrecursive)
   vscodemap("n", "|", "workbench.action.splitEditor")
-  -- keymap("n", "_", ":split<CR>", opts_nonrecursive)
   vscodemap("n", "_", "workbench.action.splitEditorOrthogonal")
   keymap("n", "Q", ":call VSCodeNotify('workbench.action.closeActiveEditor')<CR>", opts_nonrecursive)
-  -- keymap("n", "Q", ":q<CR>", opts_nonrecursive)
   keymap("n", "<Esc>", "<Esc>:noh<CR>", opts_nonrecursive) 
 
   -- Load folding.lua from same directory as init.lua
   dofile(vim.fn.expand('<sfile>:p:h') .. '/folding.lua')
 
+  -- Set comment strings for different file types
+  local augroup = vim.api.nvim_create_augroup("CommentStrings", { clear = true })
+  vim.api.nvim_create_autocmd("FileType", {
+    group = augroup,
+    pattern = "php",
+    callback = function()
+      vim.bo.commentstring = "// %s"
+    end,
+  })
+  vim.api.nvim_create_autocmd("FileType", {
+    group = augroup,
+    pattern = "javascript",
+    callback = function()
+      vim.bo.commentstring = "// %s"
+    end,
+  })
+  vim.api.nvim_create_autocmd("FileType", {
+    group = augroup,
+    pattern = "reason",
+    callback = function()
+      vim.bo.commentstring = "// %s"
+    end,
+  })
+  vim.api.nvim_create_autocmd("FileType", {
+    group = augroup,
+    pattern = "dosbatch",
+    callback = function()
+      vim.bo.commentstring = "rem %s"
+    end,
+  })
+  vim.api.nvim_create_autocmd("FileType", {
+    group = augroup,
+    pattern = "rust",
+    callback = function()
+      vim.bo.commentstring = "// %s"
+    end,
+  })
+  vim.api.nvim_create_autocmd("FileType", {
+    group = augroup,
+    pattern = "python",
+    callback = function()
+      vim.bo.commentstring = "# %s"
+    end,
+  })
+
+  -- Find next occurrence
+  vim.keymap.set({ "n", "x", "i" }, "<C-d>", function()
+    vscode.with_insert(function()
+      vscode.action("editor.action.addSelectionToNextFindMatch")
+    end)
+  end)
+
+  -- LSP
+  vscodemap("n", "[d", "editor.action.marker.prev")
+  vscodemap("n", "]d", "editor.action.marker.next")
+  vscodemap("n", "gd", "editor.action.revealDefinition")
+  vscodemap("n", "gr", "editor.action.referenceSearch.trigger")
+  vscodemap("n", "gI", "editor.action.goToImplementation")
+  vscodemap("n", "gt", "editor.action.goToTypeDefinition")
+  vscodemap("n", "gh", "editor.action.showDefinitionPreviewHover")
+
+  -- Toggle inline chat
+  vscodemap("v", "<C-i>", "inlineChat.start")
+
+  -- Vscode multi-cursor support
+
+  -- local cursors = require('vscode-multi-cursor')
+
+  -- vim.keymap.set({'n', 'x', 'i'}, '<c-d>', function()
+  --     cursors.addSelectionToNextFindMatch()
+  -- end)
+
+  -- vim.keymap.set({'n', 'x', 'i'}, '<cs-d>', function()
+  --     cursors.addSelectionToPreviousFindMatch()
+  -- end)
+
+  -- vim.keymap.set({'n', 'x', 'i'}, '<cs-l>', function()
+  --     cursors.selectHighlights()
+  -- end)
+
+  -- local k = vim.keymap.set
+  -- keymap({ 'n', 'x' }, 'mc', cursors.create_cursor, { expr = true, desc = 'Create cursor' })
+  -- k({ 'n' }, 'mcc', cursors.cancel, { desc = 'Cancel/Clear all cursors' })
+  -- k({ 'n', 'x' }, 'mi', cursors.start_left, { desc = 'Start cursors on the left' })
+  -- k({ 'n', 'x' }, 'mI', cursors.start_left_edge, { desc = 'Start cursors on the left edge' })
+  -- k({ 'n', 'x' }, 'ma', cursors.start_right, { desc = 'Start cursors on the right' })
+  -- k({ 'n', 'x' }, 'mA', cursors.start_right, { desc = 'Start cursors on the right' })
+  -- k({ 'n' }, '[mc', cursors.prev_cursor, { desc = 'Goto prev cursor' })
+  -- k({ 'n' }, ']mc', cursors.next_cursor, { desc = 'Goto next cursor' })
+  -- k({ 'n' }, 'mcs', cursors.flash_char, { desc = 'Create cursor using flash' })
+  -- keymap({ 'n' }, 'mcw', cursors.flash_word, { desc = 'Create selection using flash' })
+
 end
-
-
-
