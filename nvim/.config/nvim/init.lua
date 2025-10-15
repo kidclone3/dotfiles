@@ -1,4 +1,4 @@
-require("config.lazy")
+-- require("config.lazy")
 
 -- Check for VSCode Neovim extension environment
 if vim.g.vscode then
@@ -57,10 +57,6 @@ if vim.g.vscode then
 
   -- Normal mode: leader mappings
   vscodemap("n", "<leader>/", "editor.action.commentLine")
-  vscodemap("n", "<leader>h", "workbench.action.focusLeftGroup")
-  vscodemap("n", "<leader>j", "workbench.action.focusBelowGroup")
-  vscodemap("n", "<leader>k", "workbench.action.focusAboveGroup")
-  vscodemap("n", "<leader>l", "workbench.action.focusRightGroup")
   vscodemap("n", "<leader>ne", "workbench.explorer.fileView.focus")
   vscodemap("n", "<leader>w", "workbench.action.file.save")
   vscodemap("n", "gh", "editor.action.showDefinitionPreviewHover")
@@ -68,24 +64,22 @@ if vim.g.vscode then
   vscodemap("n", "<leader>f", "workbench.action.findInFiles")
   vscodemap("n", "<leader>s", "workbench.action.showAllSymbols")
   vscodemap("n", "<leader>r", "editor.action.startFindReplaceAction")
-  vscodemap("n", "<leader>e", "workbench.view.explorer")
-  vscodemap("n", "<leader>c", "workbench.action.closeActiveEditor")
+  vscodemap({"n", "v"}, "<C-n>", "editor.action.addSelectionToNextFindMatch")
 
 
-  -- Tab navigation
-  -- keymap("n", "H", ":call VSCodeNotify('workbench.action.previousEditor')<CR>", opts_nonrecursive)
-  -- keymap("n", "L", ":call VSCodeNotify('workbench.action.nextEditor')<CR>", opts_nonrecursive)
-  vscodemap("n", "H", "workbench.action.previousEditor")
-  vscodemap("n", "L", "workbench.action.nextEditor")
+  vscodemap("n", "<leader>,", "workbench.action.showAllEditors")
+  vscodemap("n", "<leader>gg", "workbench.view.scm")
+  -- Go to start and end of line
+  keymap("n", "H", "^", opts_nonrecursive)
+  keymap("n", "L", "$", opts_nonrecursive)
+
 
   -- Split navigation
-  -- keymap("n", "|", ":vsplit<CR>", opts_nonrecursive)
-  -- nvim_keymap("n", "|", ":vsplit<CR>", opts_nonrecursive)
   vscodemap("n", "|", "workbench.action.splitEditor")
-  -- keymap("n", "_", ":split<CR>", opts_nonrecursive)
   vscodemap("n", "_", "workbench.action.splitEditorOrthogonal")
-  keymap("n", "Q", ":call VSCodeNotify('workbench.action.closeActiveEditor')<CR>", opts_nonrecursive)
-  -- keymap("n", "Q", ":q<CR>", opts_nonrecursive)
+  vscodemap("n", "Q", "workbench.action.closeActiveEditor")
+  vscodemap({"n", "v"}, "<Tab>", "workbench.action.nextEditor")
+  vscodemap({"n", "v"}, "<S-Tab>", "workbench.action.previousEditor")
   keymap("n", "<Esc>", "<Esc>:noh<CR>", opts_nonrecursive) 
 
   -- Load folding.lua from same directory as init.lua
@@ -93,30 +87,30 @@ if vim.g.vscode then
 
   -- Vscode multi-cursor support
 
-  local cursors = require('vscode-multi-cursor')
+  -- local cursors = require('vscode-multi-cursor')
 
-  vim.keymap.set({'n', 'x', 'i'}, '<c-d>', function()
-      cursors.addSelectionToNextFindMatch()
-  end)
+  -- vim.keymap.set({'n', 'x', 'i'}, '<c-d>', function()
+  --     cursors.addSelectionToNextFindMatch()
+  -- end)
 
-  vim.keymap.set({'n', 'x', 'i'}, '<cs-d>', function()
-      cursors.addSelectionToPreviousFindMatch()
-  end)
+  -- vim.keymap.set({'n', 'x', 'i'}, '<cs-d>', function()
+  --     cursors.addSelectionToPreviousFindMatch()
+  -- end)
 
-  vim.keymap.set({'n', 'x', 'i'}, '<cs-l>', function()
-      cursors.selectHighlights()
-  end)
+  -- vim.keymap.set({'n', 'x', 'i'}, '<cs-l>', function()
+  --     cursors.selectHighlights()
+  -- end)
 
-  local k = vim.keymap.set
-  keymap({ 'n', 'x' }, 'mc', cursors.create_cursor, { expr = true, desc = 'Create cursor' })
-  k({ 'n' }, 'mcc', cursors.cancel, { desc = 'Cancel/Clear all cursors' })
-  k({ 'n', 'x' }, 'mi', cursors.start_left, { desc = 'Start cursors on the left' })
-  k({ 'n', 'x' }, 'mI', cursors.start_left_edge, { desc = 'Start cursors on the left edge' })
-  k({ 'n', 'x' }, 'ma', cursors.start_right, { desc = 'Start cursors on the right' })
-  k({ 'n', 'x' }, 'mA', cursors.start_right, { desc = 'Start cursors on the right' })
-  k({ 'n' }, '[mc', cursors.prev_cursor, { desc = 'Goto prev cursor' })
-  k({ 'n' }, ']mc', cursors.next_cursor, { desc = 'Goto next cursor' })
-  k({ 'n' }, 'mcs', cursors.flash_char, { desc = 'Create cursor using flash' })
-  keymap({ 'n' }, 'mcw', cursors.flash_word, { desc = 'Create selection using flash' })
+  -- local k = vim.keymap.set
+  -- keymap({ 'n', 'x' }, 'mc', cursors.create_cursor, { expr = true, desc = 'Create cursor' })
+  -- k({ 'n' }, 'mcc', cursors.cancel, { desc = 'Cancel/Clear all cursors' })
+  -- k({ 'n', 'x' }, 'mi', cursors.start_left, { desc = 'Start cursors on the left' })
+  -- k({ 'n', 'x' }, 'mI', cursors.start_left_edge, { desc = 'Start cursors on the left edge' })
+  -- k({ 'n', 'x' }, 'ma', cursors.start_right, { desc = 'Start cursors on the right' })
+  -- k({ 'n', 'x' }, 'mA', cursors.start_right, { desc = 'Start cursors on the right' })
+  -- k({ 'n' }, '[mc', cursors.prev_cursor, { desc = 'Goto prev cursor' })
+  -- k({ 'n' }, ']mc', cursors.next_cursor, { desc = 'Goto next cursor' })
+  -- k({ 'n' }, 'mcs', cursors.flash_char, { desc = 'Create cursor using flash' })
+  -- keymap({ 'n' }, 'mcw', cursors.flash_word, { desc = 'Create selection using flash' })
 
 end
