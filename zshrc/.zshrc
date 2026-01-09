@@ -156,13 +156,6 @@ source $ZSH/oh-my-zsh.sh
 
 
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-
-
-
 # ===================================================================
 # CUSTOM FUNCTIONS AND FUNCTION ALIASES
 # ===================================================================
@@ -181,19 +174,8 @@ echo "${RED}Warp disconnected"
 fi
 }
 alias warp='warp_func'
-# . "/home/delus/.deno/env"
-# pnpm
-export PNPM_HOME="/home/delus/snap/code/174/.local/share/pnpm"
-case ":$PATH:" in
-    *":$PNPM_HOME:"*) ;;
-    *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
 
 export PATH="/home/delus/.local/bin:$PATH"
-
-
 
 PATH="/home/delus/perl5/bin${PATH:+:${PATH}}"; export PATH;
 PERL5LIB="/home/delus/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
@@ -202,28 +184,19 @@ PERL_MB_OPT="--install_base \"/home/delus/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/delus/perl5"; export PERL_MM_OPT;
 
 
-
-# use node version
-nvm use v20.18.0 &> /dev/null
-
-
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 # Load custom zsh configuration
 . ~/.custom.zshrc
-# bun completions
-# [ -s "/home/delus/.bun/_bun" ] && source "/home/delus/.bun/_bun"
-
-
-# bun
-# export BUN_INSTALL="$HOME/.bun"
-# export PATH="$BUN_INSTALL/bin:$PATH"
 
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
-
+# append completions to fpath
+fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
+# initialise completions with ZSH's compinit
+autoload -Uz compinit && compinit
 
 # Check battery adapter
 
@@ -231,7 +204,23 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 alias bcheck="acpi -a"
 alias kubed="kubectl -n dev"
 
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/delus/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/delus/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/delus/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/delus/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
 
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - zsh)"
+alias cc="claude --dangerously-skip-permissions"
+alias cc2="ccr code --dangerously-skip-permissions"
+alias ccm="CLAUDE_CONFIG_DIR=~/.claude-max claude --dangerously-skip-permissions"
+alias ccu='CLAUDE_CONFIG_DIR="$HOME/.claude,$HOME/.claude-max" npx ccusage@latest'
+
