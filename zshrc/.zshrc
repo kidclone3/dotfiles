@@ -224,3 +224,12 @@ alias cc2="ccr code --dangerously-skip-permissions"
 alias ccm="CLAUDE_CONFIG_DIR=~/.claude-max claude --dangerously-skip-permissions"
 alias ccu='CLAUDE_CONFIG_DIR="$HOME/.claude,$HOME/.claude-max" npx ccusage@latest'
 
+
+# bun completions
+[ -s "/home/delus/.bun/_bun" ] && source "/home/delus/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+alias claude-mem='/home/delus/.bun/bin/bun "/home/delus/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
