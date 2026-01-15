@@ -37,6 +37,11 @@ if vim.g.vscode then
     vim.keymap.set(mode, lhs, function() vscode.call(rhs) end, { silent = true, noremap = true })
   end
 
+  -- asyncvscodemap
+  local function asyncvscodemap(mode, lhs, rhs)
+    vim.keymap.set(mode, lhs, function() vscode.action(rhs) end, { silent = true, noremap = true })
+  end
+
 
   -- yank to system clipboard
   keymap({"n", "v"}, "<leader>y", '"+y', opts_nonrecursive)
@@ -64,7 +69,7 @@ if vim.g.vscode then
   vscodemap("n", "<leader>f", "workbench.action.findInFiles")
   vscodemap("n", "<leader>s", "workbench.action.showAllSymbols")
   vscodemap("n", "<leader>r", "editor.action.startFindReplaceAction")
-  vscodemap({"n", "v"}, "<C-n>", "editor.action.addSelectionToNextFindMatch")
+  vscodemap({"n", "v", "i"}, "<C-n>", "editor.action.addSelectionToNextFindMatch")
 
 
   vscodemap("n", "<leader>,", "workbench.action.showAllEditors")
@@ -82,6 +87,13 @@ if vim.g.vscode then
   vscodemap({"n", "v"}, "<S-Tab>", "workbench.action.previousEditor")
   keymap("n", "<Esc>", "<Esc>:noh<CR>", opts_nonrecursive) 
 
+  -- Run tests
+  -- Run current cursor
+  asyncvscodemap("n", "<leader>tc", "testing.runAtCursor")
+  asyncvscodemap("n", "<leader>td", "testing.debugAtCursor")
+  asyncvscodemap("n", "<leader>tt", "testing.runCurrentFile")
+  asyncvscodemap("n", "<leader>ta", "testing.runAll")
+
 
  -- LSP
   vscodemap("n", "[d", "editor.action.marker.prev")
@@ -98,6 +110,11 @@ if vim.g.vscode then
   -- Load folding.lua from same directory as init.lua
   dofile(vim.fn.expand('<sfile>:p:h') .. '/folding.lua')
 
+  vim.keymap.set({ "n", "x", "i" }, "<C-d>", function()
+    vscode.with_insert(function()
+      vscode.action("editor.action.addSelectionToNextFindMatch")
+    end)
+  end)
   -- Vscode multi-cursor support
 
   -- local cursors = require('vscode-multi-cursor')
