@@ -185,8 +185,6 @@ PERL_MM_OPT="INSTALL_BASE=/home/delus/perl5"; export PERL_MM_OPT;
 
 
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
-# Load custom zsh configuration
-. ~/.custom.zshrc
 
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -219,6 +217,9 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+# Load custom zsh configuration
+. ~/.custom.zshrc
+
 alias cc="claude --dangerously-skip-permissions"
 alias cc2="ccr code --dangerously-skip-permissions"
 alias ccm="CLAUDE_CONFIG_DIR=~/.claude-max claude --dangerously-skip-permissions"
@@ -233,3 +234,6 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 alias claude-mem='/home/delus/.bun/bin/bun "/home/delus/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+
+# opencode
+export PATH=/home/delus/.opencode/bin:$PATH
