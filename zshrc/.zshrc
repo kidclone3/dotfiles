@@ -175,21 +175,19 @@ fi
 }
 alias warp='warp_func'
 
-export PATH="/home/delus/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
-PATH="/home/delus/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="/home/delus/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/home/delus/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/home/delus/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/home/delus/perl5"; export PERL_MM_OPT;
+PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
 
 
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
-# Load custom zsh configuration
-. ~/.custom.zshrc
 
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
@@ -201,35 +199,88 @@ autoload -Uz compinit && compinit
 # Check battery adapter
 
 
-alias bcheck="acpi -a"
-alias kubed="kubectl -n dev"
+# alias bcheck="acpi -a"
+# alias kubed="kubectl -n dev"
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/delus/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/delus/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/delus/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/delus/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+# Load custom zsh configuration
+. ~/.custom.zshrc
 
-alias cc="claude --dangerously-skip-permissions"
-alias cc2="ccr code --dangerously-skip-permissions"
-alias ccm="CLAUDE_CONFIG_DIR=~/.claude-max claude --dangerously-skip-permissions"
+
+# ccg - Claude Code with GLM config (credentials scoped to this command only)
+function ccg() {
+    (
+        set -a
+        source ~/.claude-glm/.env
+        set +a
+        CLAUDE_CONFIG_DIR=~/.claude-glm claude --dangerously-skip-permissions "$@"
+    )
+}
+alias ccm="claude --dangerously-skip-permissions"
 alias ccu='CLAUDE_CONFIG_DIR="$HOME/.claude,$HOME/.claude-max" npx ccusage@latest'
 
 
 # bun completions
-[ -s "/home/delus/.bun/_bun" ] && source "/home/delus/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-alias claude-mem='/home/delus/.bun/bin/bun "/home/delus/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+alias claude-mem='$HOME/.bun/bin/bun "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+# Claude Code: Handle duplicate rules between project and global
+# Usage: cc-fix-dupes [project_dir]
+# Defaults to current directory if no argument provided
+cc-fix-dupes() {
+    local project_dir="${1:-.}"
+    local global_rules="$HOME/.claude/rules"
+    local local_rules="$project_dir/.claude/rules"
+
+    # Check if directories exist
+    if [[ ! -d "$local_rules" ]]; then
+        echo "⚠️  No .claude/rules found in $project_dir"
+        return 1
+    fi
+
+    if [[ ! -d "$global_rules" ]]; then
+        echo "⚠️  No global rules found at $global_rules"
+        return 1
+    fi
+
+    echo "🔍 Checking for duplicate rules..."
+    echo "   Global: $global_rules"
+    echo "   Local:  $local_rules"
+    echo ""
+
+    local found_dupes=false
+    local renamed_count=0
+
+    # Find duplicates and rename global ones
+    for local_file in "$local_rules"/*.md; do
+        [[ -f "$local_file" ]] || continue
+
+        local filename=$(basename "$local_file")
+        local global_file="$global_rules/$filename"
+
+        if [[ -f "$global_file" ]]; then
+            if [[ ! -f "$global_file.bak" ]]; then
+                echo "📝 Renaming: $filename"
+                mv "$global_file" "$global_file.bak"
+                ((renamed_count++))
+            else
+                echo "⏭️  Already backed up: $filename"
+            fi
+            found_dupes=true
+        fi
+    done
+
+    echo ""
+    if [[ "$found_dupes" == "true" ]]; then
+        echo "✅ Done! Renamed $renamed_count file(s)"
+        echo "💡 To restore: mv ~/.claude/rules/*.bak ~/.claude/rules/"
+    else
+        echo "✨ No duplicates found!"
+    fi
+}
+
+# Quick alias
+alias cc-fix-dupes='cc-fix-dupes'

@@ -1,5 +1,3 @@
-export ZSH_CUSTOM=/home/delus/Documents/tools/dotfiles/oh-my-zsh/.oh-my-zsh/custom
-
 # ===================================================================
 # ALIASES CONFIGURATION
 # ===================================================================
@@ -12,3 +10,5 @@ alias pc=pycharm
 
 # Python Development Aliases
 alias mkpydir='function _mkpydir() { mkdir -p "$1" && touch "$1/__init__.py"; }; _mkpydir'
+
+export FZF_BASE=$HOME/.local/bin/fzf
