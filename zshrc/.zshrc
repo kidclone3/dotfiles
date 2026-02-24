@@ -220,9 +220,16 @@ unset __conda_setup
 # Load custom zsh configuration
 . ~/.custom.zshrc
 
-alias cc="claude --dangerously-skip-permissions"
-alias cc2="ccr code --dangerously-skip-permissions"
-alias ccm="CLAUDE_CONFIG_DIR=~/.claude-max claude --dangerously-skip-permissions"
+# ccg - Claude Code with GLM config (credentials scoped to this command only)
+function ccg() {
+    (
+        set -a
+        source ~/.claude-glm/.env
+        set +a
+        CLAUDE_CONFIG_DIR=~/.claude-glm claude --dangerously-skip-permissions "$@"
+    )
+}
+alias ccm="claude --dangerously-skip-permissions"
 alias ccu='CLAUDE_CONFIG_DIR="$HOME/.claude,$HOME/.claude-max" npx ccusage@latest'
 
 
@@ -237,3 +244,5 @@ alias claude-mem='/home/delus/.bun/bin/bun "/home/delus/.claude/plugins/marketpl
 
 # opencode
 export PATH=/home/delus/.opencode/bin:$PATH
+
+eval "$(zoxide init zsh)"
