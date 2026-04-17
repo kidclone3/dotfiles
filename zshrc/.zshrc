@@ -283,4 +283,7 @@ cc-fix-dupes() {
 }
 
 # Quick alias
-alias cc-fix-dupes='cc-fix-dupes'
+
+export TERM=xterm-256color
+
+alias glm-claude="nix develop ~/nix-shells/glm-claude"
