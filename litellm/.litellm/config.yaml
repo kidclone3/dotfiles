@@ -39,6 +39,13 @@ model_list:
       api_key: os.environ/ZAI_API_KEY
       rpm: 60
 
+  - model_name: glm-opus              # failover, same tier
+    litellm_params:
+      model: anthropic/glm-5
+      api_base: https://api.z.ai/api/anthropic
+      api_key: os.environ/ZAI_API_KEY
+      rpm: 60
+
   # ── Sonnet-tier (workhorse; 1× quota) ─────────────────────────────
   - model_name: glm-sonnet
     litellm_params:
