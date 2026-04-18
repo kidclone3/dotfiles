@@ -82,3 +82,6 @@ general_settings:
   master_key: sk-litellm-local
   disable_spend_logs: true            # ← kills the passthrough cost path
   disable_error_logs: false           # keep real errors visible
+  success_callback: []
+  failure_callback: []
+  callbacks: []
