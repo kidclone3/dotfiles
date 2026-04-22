@@ -287,3 +287,11 @@ cc-fix-dupes() {
 export TERM=xterm-256color
 
 alias glm-claude="nix develop ~/nix-shells/glm-claude"
+
+# pnpm
+export PNPM_HOME="/Users/delus/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
