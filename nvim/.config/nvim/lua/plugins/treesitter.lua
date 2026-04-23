@@ -3,9 +3,8 @@ return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     config = function()
-      local config = require("nvim-treesitter.configs")
-      config.setup({
-        auto_install = true,
+      require("nvim-treesitter").setup({
+        auto_install = { enable = true },
         highlight = { enable = true },
         indent = { enable = true },
       })

@@ -1,4 +1,4 @@
-export ZSH_CUSTOM=/home/delus/Documents/tools/dotfiles/oh-my-zsh/.oh-my-zsh/custom
+export ZSH_CUSTOM=$HOME/Documents/tools/dotfiles/oh-my-zsh/.oh-my-zsh/custom
 
 # ===================================================================
 # ALIASES CONFIGURATION
@@ -15,23 +15,29 @@ alias mkpydir='function _mkpydir() { mkdir -p "$1" && touch "$1/__init__.py"; };
 
 
 # ===================================================================
-# AUTO-ACTIVATE CONDA ENV BY FOLDER NAME
+# UV ENVIRONMENT MANAGEMENT
 # ===================================================================
 
-# Auto-activate conda environment if it matches current folder name
-function auto_conda_activate() {
+export UV_ENV_DIR="$HOME/.local/share/uv/envs"
+
+# uva - activate a named uv environment
+uva() { source "$UV_ENV_DIR/$1/bin/activate"; }
+
+# uvc - create a named uv environment
+uvc() { uv venv "$UV_ENV_DIR/$1" --python "${2:-3.12}"; }
+
+# Auto-activate uv environment if it matches current folder name
+function auto_uv_activate() {
     local folder_name=$(basename "$PWD")
 
-    # Check if conda env exists with this name
-    if conda env list | grep -qw "^$folder_name "; then
+    # Check if uv env exists with this name
+    if [[ -d "$UV_ENV_DIR/$folder_name" ]]; then
         # Only activate if not already in this env
-        if [[ "$CONDA_DEFAULT_ENV" != "$folder_name" ]]; then
-            conda activate "$folder_name"
+        if [[ "$VIRTUAL_ENV" != "$UV_ENV_DIR/$folder_name" ]]; then
+            source "$UV_ENV_DIR/$folder_name/bin/activate"
         fi
-    else
-        echo "⚠️   No conda env found for: $folder_name"
     fi
 }
 
 # Run on shell startup (works for new tmux panes/windows)
-auto_conda_activate
+auto_uv_activate
