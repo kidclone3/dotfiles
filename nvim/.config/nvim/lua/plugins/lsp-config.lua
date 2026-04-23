@@ -19,20 +19,10 @@ return {
     config = function()
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-      local lspconfig = require("lspconfig")
-      lspconfig.tailwindcss.setup({
-        capabilities = capabilities
-      })
-      lspconfig.ruby_lsp.setup({
-        capabilities = capabilities,
-        cmd = { "/home/typecraft/.asdf/shims/ruby-lsp" }
-      })
-      lspconfig.html.setup({
-        capabilities = capabilities
-      })
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities
-      })
+      for _, server in ipairs({ "tailwindcss", "html", "lua_ls" }) do
+        vim.lsp.config(server, { capabilities = capabilities })
+        vim.lsp.enable(server)
+      end
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
       vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
