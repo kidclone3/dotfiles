@@ -5,6 +5,7 @@ vim.cmd("set shiftwidth=2")
 vim.g.mapleader = " "
 
 vim.opt.swapfile = false
+vim.opt.clipboard = "unnamedplus"
 
 -- Navigate vim panes better
 vim.keymap.set('n', '<c-k>', ':wincmd k<CR>')
@@ -14,3 +15,4 @@ vim.keymap.set('n', '<c-l>', ':wincmd l<CR>')
 
 vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>')
 vim.wo.number = true
+vim.wo.linebreak = true
