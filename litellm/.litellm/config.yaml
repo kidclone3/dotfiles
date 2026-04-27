@@ -77,7 +77,7 @@ router_settings:
   cooldown_time: 30
 
 litellm_settings:
-  drop_params: true
+  drop_params: false
   fallbacks:
     - glm-opus:   ["glm-sonnet", "glm-haiku"]
     - glm-sonnet: ["glm-haiku"]
