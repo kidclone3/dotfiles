@@ -1,0 +1,26 @@
+# Centralized cache — shared across all projects
+cache-dir = "~/.cache/uv"
+
+# Prefer uv-managed Python installs
+python-preference = "managed"
+
+# Faster installs
+concurrent-downloads = 10
+compile-bytecode = true
+
+# Use hardlinks from cache to .venv (saves disk space)
+link-mode = "hardlink"
+
+# Index configuration — add mirrors if PyPI is slow from Vietnam
+[[index]]
+url = "https://pypi.org/simple"
+default = true
+
+# Example: add Tsinghua mirror as fallback
+# [[index]]
+# name = "tsinghua"
+# url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+
+# Pip-compatible resolver settings
+[pip]
+index-strategy = "unsafe-best-match"

@@ -201,23 +201,24 @@ autoload -Uz compinit && compinit
 
 alias bcheck="acpi -a"
 alias kubed="kubectl -n dev"
+alias tmn="tmux new-session -s \${PWD##*/}"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 # Skip conda init inside the glm nix dev shell so uv-managed python wins.
-if [ -z "$IN_GLM_SHELL" ]; then
-    __conda_setup="$("$HOME/miniconda3/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "$HOME/miniconda3/etc/profile.d/conda.sh"
-        else
-            export PATH="$HOME/miniconda3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-fi
+# if [ -z "$IN_GLM_SHELL" ]; then
+#     __conda_setup="$("$HOME/miniconda3/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
+#     if [ $? -eq 0 ]; then
+#         eval "$__conda_setup"
+#     else
+#         if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+#             . "$HOME/miniconda3/etc/profile.d/conda.sh"
+#         else
+#             export PATH="$HOME/miniconda3/bin:$PATH"
+#         fi
+#     fi
+#     unset __conda_setup
+# fi
 # <<< conda initialize <<<
 
 # Load custom zsh configuration
@@ -241,7 +242,7 @@ function ccm() {
         claude --dangerously-skip-permissions "$@"
     )
 }
-alias ccu='CLAUDE_CONFIG_DIR="$HOME/.claude,$HOME/.claude-max" npx ccusage@latest'
+alias ccu='CLAUDE_CONFIG_DIR="$HOME/.claude,$HOME/.claude-glm" npx ccusage@latest'
 
 
 # bun completions
@@ -317,3 +318,8 @@ export EDITOR=vim
 # Enter the glm-claude nix dev shell
 alias glm="nix develop $HOME/nix-shells/glm-claude -c zsh"
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+
+# tele-claude: forward every `claude` invocation to Telegram by default
+alias claude='TELE_CLAUDE=1 command claude'
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
