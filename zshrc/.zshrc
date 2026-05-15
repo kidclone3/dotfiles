@@ -136,9 +136,9 @@ export NVM_DIR="$HOME/.nvm"
 # ~/.bash_profile if it exists, otherwise ~/.profile (for login shells)
 # and ~/.bashrc (for interactive shells) :
 
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+# export PYENV_ROOT="$HOME/.pyenv"
+# command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init -)"
 
 # eval "$(pyenv virtualenv-init -)"
 
@@ -168,12 +168,8 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
 
-export PATH="/home/delus/.local/bin:$PATH"
-
+export PATH="$HOME/.local/bin:$PATH"
 
 PATH="/home/delus/perl5/bin${PATH:+:${PATH}}"; export PATH;
 PERL5LIB="/home/delus/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
@@ -189,6 +185,8 @@ typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 # Load custom zsh configuration
 . ~/.custom.zshrc
 
-export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgtk3-nocsd.so.0${LD_PRELOAD:+:$LD_PRELOAD}
+# export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgtk3-nocsd.so.0${LD_PRELOAD:+:$LD_PRELOAD}
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+. "$HOME/.local/bin/env"
