@@ -12,3 +12,6 @@ alias pc=pycharm
 
 # Python Development Aliases
 alias mkpydir='function _mkpydir() { mkdir -p "$1" && touch "$1/__init__.py"; }; _mkpydir'
+
+alias ccm='npx @anthropic-ai/claude-code --dangerously-skip-permissions "$@"'
+

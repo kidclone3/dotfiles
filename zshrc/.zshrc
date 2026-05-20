@@ -171,6 +171,9 @@ esac
 
 export PATH="$HOME/.local/bin:$PATH"
 
+# Nix profile binaries (npm, npx, etc.)
+export PATH="/nix/var/nix/profiles/default/bin:$PATH"
+
 PATH="/home/delus/perl5/bin${PATH:+:${PATH}}"; export PATH;
 PERL5LIB="/home/delus/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
 PERL_LOCAL_LIB_ROOT="/home/delus/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
@@ -190,3 +193,5 @@ typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 . "$HOME/.local/bin/env"
+
+alias f='npx @companion-ai/feynman "$@"'
