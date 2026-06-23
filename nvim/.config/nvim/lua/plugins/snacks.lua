@@ -14,4 +14,16 @@ return {
       },
     },
   },
+  config = function(_, opts)
+    require("snacks").setup(opts)
+    vim.api.nvim_create_user_command("Mdterm", function()
+      local file = vim.fn.expand("%:p")
+      Snacks.terminal.open("mdterm " .. vim.fn.fnameescape(file), {
+        win = { style = "float", border = "rounded" },
+      })
+    end, { desc = "Preview current markdown file in mdterm" })
+  end,
+  keys = {
+    { "<leader>p", "<cmd>Mdterm<cr>", desc = "Preview md in mdterm" },
+  },
 }
