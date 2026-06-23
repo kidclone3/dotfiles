@@ -195,3 +195,11 @@ typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 . "$HOME/.local/bin/env"
 
 alias f='npx @companion-ai/feynman "$@"'
+. "$HOME/.cargo/env"
+
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+eval "$(zoxide init zsh)"
+
+export TERM=xterm-kitty
+export MDTERM_IMAGE_PROTOCOL=kittyunicode
+export EDITOR=nvim
