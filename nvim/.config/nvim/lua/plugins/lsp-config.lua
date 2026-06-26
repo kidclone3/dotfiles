@@ -28,11 +28,22 @@ return {
       vim.lsp.config('lua_ls', {
         capabilities = capabilities,
       })
+      vim.lsp.config('basedpyright', {
+        capabilities = capabilities,
+      })
 
-      vim.lsp.enable({ 'tailwindcss', 'html', 'lua_ls' })
+      vim.lsp.enable({ 'tailwindcss', 'html', 'lua_ls', 'basedpyright' })
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-      vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
+      -- gd: LSP definition when a server is attached; otherwise fall back to
+      -- Vim's builtin goto-local-declaration (normal! ignores mappings).
+      vim.keymap.set('n', 'gd', function()
+        if #vim.lsp.get_clients({ bufnr = 0 }) > 0 then
+          vim.lsp.buf.definition()
+        else
+          vim.cmd('normal! gd')
+        end
+      end, { desc = 'Go to definition' })
       vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
       vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
       vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
