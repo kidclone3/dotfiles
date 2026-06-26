@@ -15,8 +15,6 @@ return {
 				-- free up `y` as a prefix (default `y` = copy_to_clipboard fires too early)
 				["y"] = "none",
 				["yy"] = "copy_to_clipboard", -- original file-copy (paste with p)
-				-- copy to SYSTEM clipboard (the + register) as text
-				["Y"] = "copy_selector", -- menu: filename / relative path / absolute path
 				["yn"] = "copy_filename_to_clipboard", -- just the name
 				["yp"] = "copy_path_to_clipboard", -- absolute path
 			},
