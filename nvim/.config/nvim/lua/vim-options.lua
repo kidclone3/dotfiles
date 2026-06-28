@@ -28,5 +28,20 @@ vim.keymap.set('n', '<c-h>', ':wincmd h<CR>')
 vim.keymap.set('n', '<c-l>', ':wincmd l<CR>')
 
 vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>')
+
+-- File / buffer shortcuts (W=save, Q=quit, B=delete buffer)
+vim.keymap.set('n', 'W', ':w<CR>')
+vim.keymap.set('n', 'Q', ':q<CR>')
+vim.keymap.set('n', 'B', ':bd<CR>')
+
+-- ca: copy entire buffer to system clipboard (overrides Vim's ca text-object operator)
+vim.keymap.set('n', 'ca', ':%y<CR>')
+
+-- N: run :normal across the visual selection (range auto-prepended to '<,'>)
+vim.keymap.set('v', 'N', ':normal ')
+
+-- Toggles: <leader>sc=spell, <leader>sw=wrap
+vim.keymap.set('n', '<leader>sc', ':set spell!<CR>')
+vim.keymap.set('n', '<leader>sw', ':set wrap!<CR>')
 vim.wo.number = true
 vim.wo.linebreak = true
