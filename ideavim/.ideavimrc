@@ -9,23 +9,55 @@ set scrolloff=0
 """ Map leader to space ---------------------
 let mapleader=" "
 
+" Search options (some don't map directly)
+set hlsearch
+set incsearch
+set smartcase
+" Indent selected lines and keep selection"
+vnoremap < <gv
+vnoremap > >gv
 
+" Move text up/down in visual
+vnoremap J :m .+1<CR>==
+xnoremap J :move '>+1<CR>gv-gv
+vnoremap K :m .-2<CR>==
+xnoremap K :move '<-2<CR>gv-gv
 
-" I like using H and L for beginning/end of line
-nmap H ^
-nmap L $
+" Insert mode: jk -> <esc>
+inoremap jk <Esc>
+
+" Normal mode: leader mappings for IDE actions (see below for how to get action IDs)
+nnoremap <leader>/ :action CommentByLineComment<CR>
+nnoremap <leader>h :action SelectPreviousTab<CR>
+nnoremap <leader>j :action SelectNextWindow<CR>
+nnoremap <leader>k :action SelectPreviousWindow<CR>
+nnoremap <leader>l :action SelectNextTab<CR>
+nnoremap <leader>ne :action ActivateProjectToolWindow<CR>
+nnoremap <leader>w :action SaveAll<CR>
+nnoremap gh :action QuickImplementations<CR>
+nnoremap <leader>f :action FindInPath<CR>
+nnoremap <leader>s :action GotoSymbol<CR>
+nnoremap <leader>r :action Replace<CR>
+nnoremap <leader>e :action ActivateProjectToolWindow<CR>
+nnoremap <leader>c :action CloseContent<CR>
+
+" Tab navigation
+nnoremap H :action PreviousTab<CR>
+nnoremap L :action NextTab<CR>
+
+" Split navigation
+nnoremap | :action SplitVertically<CR>
+nnoremap _ :action SplitHorizontally<CR>
+nnoremap Q :action CloseContent<CR>
+nnoremap <Esc> :nohlsearch<CR>
+
 
 "Highlight yank"
 set highlightedyank
 let g:highlightedyank_highlight_color = "rgba(160, 160, 160, 155)"
 let g:highlightedyank_highlight_duration = 250
 
-" Indent selected lines and keep selection"
-vnoremap > >gv
-vnoremap < <gv
 
-"Escape"
-inoremap jk <Esc>
 
 set multiple-cursors
 
@@ -33,66 +65,4 @@ set multiple-cursors
 " Plug 'easymotion/vim-easymotion' " Ensure this is correctly set up if used
 
 " --- Normal Mode Mappings ---" Better window navigation"
-
-"Select and move lines"
-nnoremap J :m .+1<CR>==
-nnoremap K :m .-2<CR>==
-
-" I like using H and L for beginning/end of line (already present)
-nmap H ^
-nmap L $
-
 " Buffer navigation
-nnoremap <S-h> :bprevious<CR>
-nnoremap <S-l> :bnext<CR>
-
-
-" Window/Split navigation (Ctrl based)
-nnoremap <C-j> <C-W>j
-nnoremap <C-k> <C-W>k
-nnoremap <C-h> <C-W>h
-nnoremap <C-l> <C-W>l
-
-" Window/Split navigation (Leader based)
-nnoremap <leader>v :vsplit<CR>
-nnoremap <leader>s :split<CR>
-nnoremap <leader>h <C-W>h
-nnoremap <leader>j <C-W>j
-nnoremap <leader>k <C-W>k
-nnoremap <leader>l <C-W>l
-
-" File tree
-nnoremap <leader>ne :action ActivateProjectToolWindow<CR>
-
-" File operations
-nnoremap <leader>w <Action>(SaveAll)
-nnoremap <leader>f <Action>(GotoFile)
-
-" Code navigation
-nnoremap gh :action QuickJavaDoc<CR> " For definition preview/hover
-
-
-" --- Visual Mode Mappings ---
-
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
-
-""" AI assistant
-map <leader>gi <Action>(ActivateAIAssistantToolWindow)
-map <leader>ic <Action>(action.AIAssistant.ToolWindow.Chat.Message.AddContext)
-
-""" Move between tabs with space and number
-nnoremap <leader>1 :tabn 1<CR>
-nnoremap <leader>2 :tabn 2<CR>
-nnoremap <leader>3 :tabn 3<CR>
-nnoremap <leader>4 :tabn 4<CR>
-nnoremap <leader>5 :tabn 5<CR>
-nnoremap <leader>6 :tabn 6<CR>
-nnoremap <leader>7 :tabn 7<CR>
-nnoremap <leader>8 :tabn 8<CR>
-nnoremap <leader>9 :tabn 9<CR>
-nnoremap <leader>0 :tabn 10<CR>
-
-""" Search and replace
-nnoremap <leader>sr :action ReplaceInPath<CR>
-nnoremap <leader>ss :action FindInPath<CR>

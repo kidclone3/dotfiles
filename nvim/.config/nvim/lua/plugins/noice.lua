@@ -1,9 +1,17 @@
 return {
   "folke/noice.nvim",
   event = "VeryLazy",
+  keys = {
+    { "<Esc>", "<cmd>nohlsearch<bar>Noice dismiss<CR>", desc = "Clear search highlight & dismiss notifications" },
+  },
   dependencies = {
     "MunifTanjim/nui.nvim",
-    "rcarriga/nvim-notify",
+    {
+      "rcarriga/nvim-notify",
+      opts = {
+        background_colour = "#000000",
+      },
+    },
   },
   opts = {
     cmdline = {
