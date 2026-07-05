@@ -3,14 +3,8 @@
 # Lists every pane whose current command is `claude`, previews its screen,
 # and on enter focuses it via the caller's client.
 # Arg: client_name (from the tmux binding, so we switch the right client).
+#      --list  → output rows and exit (used by fzf's ctrl-x reload).
 set -uo pipefail
-
-client="${1:-}"
-
-command -v fzf >/dev/null 2>&1 || {
-  tmux display-message "tmux-claude-session-manager: fzf is required"
-  exit 0
-}
 
 # pane_id <TAB> status <TAB> window.index <TAB> title <TAB> path
 rows() {
@@ -26,9 +20,23 @@ rows() {
     done
 }
 
+# --list mode: just dump rows so fzf can reload after a kill.
+if [ "${1:-}" = "--list" ]; then
+  rows
+  exit 0
+fi
+
+client="${1:-}"
+
+command -v fzf >/dev/null 2>&1 || {
+  tmux display-message "tmux-claude-session-manager: fzf is required"
+  exit 0
+}
+
 sel=$(rows | fzf --ansi --delimiter='\t' --with-nth=2,3,4,5 \
-  --reverse --cycle --header='Claude panes · enter: jump' \
-  --preview='tmux capture-pane -ept {1}' --preview-window='right,62%,wrap')
+  --reverse --cycle --header='Claude panes · enter: jump  ctrl-x: kill' \
+  --preview='tmux capture-pane -ept {1}' --preview-window='right,62%,wrap' \
+  --bind "ctrl-x:execute(tmux kill-pane -t {1})+reload($0 --list)")
 
 [ -z "$sel" ] && exit 0
 
