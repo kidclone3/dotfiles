@@ -43,5 +43,18 @@ vim.keymap.set('v', 'N', ':normal ')
 -- Toggles: <leader>sc=spell, <leader>sw=wrap
 vim.keymap.set('n', '<leader>sc', ':set spell!<CR>')
 vim.keymap.set('n', '<leader>sw', ':set wrap!<CR>')
+
+-- Ctrl+/ to toggle comments (matches VS Code / JetBrains muscle memory)
+vim.keymap.set('n', '<C-_>', 'gcc', { remap = true, desc = 'Toggle comment line' })
+vim.keymap.set('v', '<C-_>', 'gcgv', { remap = true, desc = 'Toggle comment, keep selection' })
+
+-- Keep selection after indent/outdent
+vim.keymap.set('v', '<', '<gv', { desc = 'Outdent, keep selection' })
+vim.keymap.set('v', '>', '>gv', { desc = 'Indent, keep selection' })
 vim.wo.number = true
 vim.wo.linebreak = true
+
+-- Treesitter-based folding
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldenable = false

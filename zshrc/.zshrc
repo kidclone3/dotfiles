@@ -192,9 +192,6 @@ typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-. "$HOME/.local/bin/env"
-
-alias f='npx @companion-ai/feynman "$@"'
 . "$HOME/.cargo/env"
 
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
@@ -203,3 +200,6 @@ eval "$(zoxide init zsh)"
 export TERM=xterm-kitty
 export MDTERM_IMAGE_PROTOCOL=kittyunicode
 export EDITOR=nvim
+
+# Added by codebase-memory-mcp install
+export PATH="/home/dev/.local/bin:$PATH"
