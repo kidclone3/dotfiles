@@ -7,6 +7,16 @@ return {
 		"MunifTanjim/nui.nvim",
 	},
 	opts = {
+		close_if_last_window = true,
+		event_handlers = {
+			{
+				event = "neo_tree_buffer_enter",
+				handler = function()
+					vim.opt_local.buflisted = false
+					vim.opt_local.bufhidden = "hide"
+				end,
+			},
+		},
 		window = {
 			position = "right",
 			mappings = {
@@ -41,10 +51,32 @@ return {
 				hide_gitignored = false,
 			},
 		},
+		git_status = {
+			symbols = {
+				-- shown next to each changed file in the dedicated view
+				added = "✚",
+				modified = "✹",
+				deleted = "✖",
+				renamed = "➜",
+				untracked = "?",
+				ignored = "◌",
+				unstaged = "⛔",
+				staged = "✔",
+				conflict = "",
+			},
+			window = {
+				position = "right",
+				mappings = {
+					["<cr>"] = "open_tabnew",
+					["o"] = "open_tabnew",
+				},
+			},
+		},
 	},
 	config = function(_, opts)
 		require("neo-tree").setup(opts)
 		vim.keymap.set("n", "<C-n>", ":Neotree filesystem reveal toggle right<CR>", {})
 		vim.keymap.set("n", "<leader>bf", ":Neotree buffers reveal toggle float<CR>", {})
+	vim.keymap.set("n", "<leader>gg", ":Neotree git_status toggle right<CR>", {})
 	end,
 }

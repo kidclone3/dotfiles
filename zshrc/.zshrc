@@ -311,6 +311,7 @@ cc-fix-dupes() {
         echo "✨ No duplicates found!"
     fi
 }
+. "$HOME/.cargo/env"
 
 eval "$(zoxide init zsh)"
 export EDITOR=vim
@@ -323,3 +324,9 @@ export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 alias claude='TELE_CLAUDE=1 command claude'
 
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
+export TERM=xterm-kitty
+export MDTERM_IMAGE_PROTOCOL=kittyunicode
+export EDITOR=nvim
+
+# Added by codebase-memory-mcp install
+export PATH="/home/dev/.local/bin:$PATH"

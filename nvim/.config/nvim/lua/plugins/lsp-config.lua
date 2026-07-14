@@ -33,6 +33,12 @@ return {
       })
       vim.lsp.config('basedpyright', {
         capabilities = capabilities,
+        root_dir = function(bufnr, on_dir)
+          local fname = vim.api.nvim_buf_get_name(bufnr)
+          -- nearest ancestor with a real Python project marker (ignores .git)
+          local root = vim.fs.root(fname, { 'pyproject.toml', 'pyrightconfig.json', 'setup.py' })
+          on_dir(root or vim.fs.dirname(fname))
+        end,
       })
 
       vim.lsp.enable({ 'tailwindcss', 'ruby_lsp', 'html', 'lua_ls', 'basedpyright' })
