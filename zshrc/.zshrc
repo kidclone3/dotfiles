@@ -330,3 +330,6 @@ export EDITOR=nvim
 
 # Added by codebase-memory-mcp install
 export PATH="/home/dev/.local/bin:$PATH"
+
+
+export PATH="/usr/lib/wsl/lib:$PATH"
