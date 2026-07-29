@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Open the pane picker in a popup.
+# Open the supported-agent pane picker in a popup.
 # Arg: client_name (so the picker can switch the correct client on jump).
 set -uo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -7,8 +7,8 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$DIR/helpers.sh"
 
 client="${1:-}"
-w="$(get_tmux_option @claude_popup_width '90%')"
-h="$(get_tmux_option @claude_popup_height '90%')"
+w="$(get_tmux_option_fallback @agent_popup_width @claude_popup_width '90%')"
+h="$(get_tmux_option_fallback @agent_popup_height @claude_popup_height '90%')"
 
 if [ -n "${TMUX_POPUP:-}" ]; then
   exec "$DIR/picker.sh" "$client"

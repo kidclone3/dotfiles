@@ -13,19 +13,11 @@ get_tmux_option() {
   fi
 }
 
-# session_hash <string>
-# Short, stable, portable 8-char hash for deriving a session name from a path.
-# Prefers md5sum (Linux), falls back to md5 (macOS) then shasum. The trailing
-# newline matches the conventional `echo "$path" | md5sum` scheme, so it stays
-# compatible with sessions created that way.
-session_hash() {
-  local out
-  if command -v md5sum >/dev/null 2>&1; then
-    out="$(printf '%s\n' "$1" | md5sum)"
-  elif command -v md5 >/dev/null 2>&1; then
-    out="$(printf '%s\n' "$1" | md5 -q)"
-  else
-    out="$(printf '%s\n' "$1" | shasum)"
-  fi
-  printf '%s' "${out%% *}" | cut -c1-8
+# get_tmux_option_fallback <primary> <legacy> <default>
+# Reads the generic option first, then an optional legacy migration name.
+get_tmux_option_fallback() {
+  local value
+  value="$(get_tmux_option "$1" '')"
+  [ -n "$value" ] || value="$(get_tmux_option "$2" "$3")"
+  printf '%s' "$value"
 }
