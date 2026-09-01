@@ -1,4 +1,4 @@
-# tmux Agent Session Manager
+# tmux Agents Manager
 
 Pick supported agent panes in the current tmux session from a popup picker. The picker shows normalized status, an agent icon, location, title, and path; it can preview, focus, or kill a pane.
 
@@ -9,26 +9,27 @@ The built-in identities and icons are:
 | Agent | Default command | Icon |
 | --- | --- | --- |
 | Claude Code | `claude` | `◈` |
+| Codex CLI | `codex` | `◉` |
 | pi | `pi` | `π` |
 | oh-my-pi | `oh-my-pi` | `✦` |
 | Hermes | `hermes` | `♞` |
 
 Feynman is detected separately from pi and uses the `ƒ` icon. Its default process aliases are `feynman` and `feynman.js`.
 
-Only these five identities are listed. Ordinary shells and unrelated processes are omitted.
+Only these six identities are listed. Ordinary shells and unrelated processes are omitted.
 
 ## Prerequisites
 
 - tmux >= 3.2 (for `display-popup`)
 - [fzf](https://github.com/junegunn/fzf)
-- bash on Linux or macOS
+- Bash >= 4. macOS ships Bash 3.2, so install a newer Bash and ensure it appears first on `PATH`.
 
 ## Install
 
-Load the existing entrypoint from your tmux configuration:
+Load the plugin entrypoint from your tmux configuration:
 
 ```tmux
-run-shell ~/path/to/plugin/claude_session_manager.tmux
+run-shell ~/path/to/tmux-agents-manager/tmux-agents-manager.tmux
 ```
 
 Reload tmux with `tmux source ~/.tmux.conf` or restart it. Start agents manually in panes; this plugin does not create or attach agent sessions.
@@ -52,9 +53,9 @@ The pane id is kept in a hidden first column for preview, kill, and jump actions
 Discovery uses two steps:
 
 1. Match tmux's `pane_current_command` exactly against the configured aliases.
-2. For an unmatched pane, inspect the pane process and foreground children with `ps` and match executable tokens in their command lines.
+2. For an unmatched pane, inspect the pane process and descendants in its terminal's foreground process group.
 
-The second step recognizes wrappers that launch a supported agent without broad substring matching. `--list` prints the picker rows without starting fzf, which is useful for scripts and smoke checks.
+The second step matches only an executable, an `env` command position, or a Node.js/Bun script position, so unrelated arguments and background jobs are omitted. `--list` prints picker rows without starting fzf, which is useful for scripts and smoke checks.
 
 ## Status helper
 
@@ -72,26 +73,24 @@ The helper uses `TMUX_PANE` and is a no-op outside tmux.
 
 ## Options
 
-Generic options are preferred:
+Available options:
 
 | Option | Default | Purpose |
 | --- | --- | --- |
 | `@agent_list_key` | `a` | Prefix key that opens the picker |
 | `@agent_popup_width` | `90%` | Popup width |
 | `@agent_popup_height` | `90%` | Popup height |
-| `@agent_commands` | `claude,pi,oh-my-pi,hermes` | Comma-separated command aliases |
+| `@agent_commands` | built-in aliases | Comma-separated `identity=command1|command2` alias overrides |
 | `@agent_icons` | built-in icons above | Comma-separated `identity=icon` values |
 
-Command entries may assign aliases explicitly with `identity=command1|command2`, for example:
+Built-in aliases are `claude`, `codex`, `pi`, `oh-my-pi|omp`, `hermes`, and `feynman|feynman.js`. Omitting an identity preserves its built-ins; assigning aliases replaces them, and an empty assignment disables that identity. For example:
 
 ```tmux
 set -g @agent_list_key 'u'
 set -g @agent_popup_width '80%'
-set -g @agent_commands 'claude=claude|claude-code,pi,oh-my-pi,hermes'
-set -g @agent_icons 'claude=◆,pi=π,oh-my-pi=✦,hermes=♞'
+set -g @agent_commands 'claude=claude|claude-code,codex=codex|codex-cli'
+set -g @agent_icons 'claude=◆,codex=◉,pi=π,oh-my-pi=✦,hermes=♞'
 ```
-
-For migration, popup and list settings also read legacy `@claude_list_key`, `@claude_popup_width`, and `@claude_popup_height` when their generic counterpart is unset. New configuration and state use `@agent_*`; the old `@claude_state` option is not read.
 
 ## License
 

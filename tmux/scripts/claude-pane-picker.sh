@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Picker for Claude Code panes running anywhere in tmux — including ones started
-# outside the tmux-claude-session-manager plugin. Lists every pane whose current
+# outside the tmux-agents-manager plugin. Lists every pane whose current
 # command is `claude`, previews its screen, and on enter jumps the invoking
 # client to that pane.
 #

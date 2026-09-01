@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# tmux-agent-session-manager
+# tmux-agents-manager
 #
 # Pick supported agent panes in the current tmux session from a popup picker.
 # tpm runs this file as an executable on tmux startup; it reads user options
@@ -9,7 +9,7 @@ CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=scripts/helpers.sh
 . "$CURRENT_DIR/scripts/helpers.sh"
 
-list_key="$(get_tmux_option_fallback @agent_list_key @claude_list_key 'a')"
+list_key="$(get_tmux_option @agent_list_key 'a')"
 
 # Open the pane picker.
 tmux bind-key "$list_key" \

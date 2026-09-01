@@ -8,14 +8,16 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=helpers.sh
 . "$DIR/helpers.sh"
 
-identities=(claude pi oh-my-pi hermes feynman)
+identities=(claude codex pi oh-my-pi hermes feynman)
 declare -A commands icons default_commands
 default_commands[claude]='claude'
+default_commands[codex]='codex'
 default_commands[pi]='pi'
 default_commands[oh-my-pi]='oh-my-pi|omp'
 default_commands[hermes]='hermes'
 default_commands[feynman]='feynman|feynman.js'
 icons[claude]='◈'
+icons[codex]='◉'
 icons[pi]='π'
 icons[oh-my-pi]='✦'
 icons[hermes]='♞'
@@ -23,7 +25,7 @@ icons[feynman]='ƒ'
 
 valid_identity() {
   case "$1" in
-    claude|pi|oh-my-pi|hermes|feynman) return 0;;
+    claude|codex|pi|oh-my-pi|hermes|feynman) return 0;;
     *) return 1;;
   esac
 }
@@ -42,27 +44,20 @@ append_command() {
 }
 
 parse_commands() {
-  local raw token identity command default_identity
-  raw="$(get_tmux_option @agent_commands 'claude,pi,oh-my-pi,hermes')"
+  local raw token identity command
+  raw="$(get_tmux_option @agent_commands '')"
   for identity in "${identities[@]}"; do commands[$identity]="${default_commands[$identity]}"; done
   IFS=',' read -ra tokens <<< "$raw"
   for token in "${tokens[@]}"; do
     token="${token//[[:space:]]/}"
     [ -n "$token" ] || continue
-    if [[ "$token" == *=* ]]; then
-      identity="${token%%=*}"
-      command="${token#*=}"
-      valid_identity "$identity" || continue
-      commands[$identity]=''
-      IFS='|' read -ra aliases <<< "$command"
-      for command in "${aliases[@]}"; do append_command "$identity" "$command"; done
-      continue
-    fi
-    default_identity=''
-    for identity in "${identities[@]}"; do
-      [ "$token" = "${default_commands[$identity]}" ] && { default_identity="$identity"; break; }
-    done
-    [ -n "$default_identity" ] && append_command "$default_identity" "$token"
+    [[ "$token" == *=* ]] || continue
+    identity="${token%%=*}"
+    command="${token#*=}"
+    valid_identity "$identity" || continue
+    commands[$identity]=''
+    IFS='|' read -ra aliases <<< "$command"
+    for command in "${aliases[@]}"; do append_command "$identity" "$command"; done
   done
 }
 
@@ -90,25 +85,102 @@ identity_for_token() {
   return 1
 }
 
+identity_for_argv() {
+  local args="$1" launcher token identity i
+  local -a argv=()
+  read -r -a argv <<< "$args"
+  [ "${#argv[@]}" -gt 0 ] || return 1
+
+  if identity="$(identity_for_token "${argv[0]}")"; then
+    printf '%s' "$identity"
+    return 0
+  fi
+
+  launcher="${argv[0]##*/}"
+  case "$launcher" in
+    env)
+      for ((i = 1; i < ${#argv[@]}; i++)); do
+        token="${argv[$i]}"
+        case "$token" in
+          -u|--unset|-C|--chdir|--split-string) i=$((i + 1)); continue;;
+          --|-*|*=*) continue;;
+        esac
+        identity_for_token "$token"
+        return
+      done
+      ;;
+    node|nodejs)
+      for ((i = 1; i < ${#argv[@]}; i++)); do
+        token="${argv[$i]}"
+        case "$token" in
+          -e*|--eval|--eval=*|-p*|--print|--print=*) return 1;;
+          -r|--require|--import|--loader|--experimental-loader) i=$((i + 1)); continue;;
+          --require=*|--import=*|--loader=*|--experimental-loader=*|-*) continue;;
+          --) continue;;
+        esac
+        identity_for_token "$token"
+        return
+      done
+      ;;
+    bun|bunx)
+      for ((i = 1; i < ${#argv[@]}; i++)); do
+        token="${argv[$i]}"
+        case "$token" in
+          -e*|--eval|--eval=*|-p*|--print|--print=*) return 1;;
+          -r|--preload|--cwd) i=$((i + 1)); continue;;
+          --preload=*|--cwd=*|-*) continue;;
+          --|run) continue;;
+        esac
+        identity_for_token "$token"
+        return
+      done
+      ;;
+  esac
+  return 1
+}
+
 identity_for_args() {
-  local pid="$1" depth=0 child args token identity
+  local root_pid="$1" foreground_pgid entry pid depth child child_pgid args identity
   local -a queue=()
-  queue+=("$pid")
-  while [ "${#queue[@]}" -gt 0 ] && [ "$depth" -lt 5 ]; do
-    pid="${queue[0]}"
+
+  args="$(ps -o args= -p "$root_pid" 2>/dev/null || true)"
+  if identity="$(identity_for_argv "$args")"; then
+    printf '%s' "$identity"
+    return 0
+  fi
+
+  foreground_pgid="$(ps -o tpgid= -p "$root_pid" 2>/dev/null || true)"
+  foreground_pgid="${foreground_pgid//[[:space:]]/}"
+  case "$foreground_pgid" in
+    ''|-1|0) return 1;;
+  esac
+
+  while read -r child; do
+    [ -n "$child" ] || continue
+    child_pgid="$(ps -o pgid= -p "$child" 2>/dev/null || true)"
+    child_pgid="${child_pgid//[[:space:]]/}"
+    [ "$child_pgid" = "$foreground_pgid" ] && queue+=("$child:1")
+  done < <(pgrep -P "$root_pid" 2>/dev/null || true)
+
+  while [ "${#queue[@]}" -gt 0 ]; do
+    entry="${queue[0]}"
     queue=("${queue[@]:1}")
+    pid="${entry%%:*}"
+    depth="${entry#*:}"
+
     args="$(ps -o args= -p "$pid" 2>/dev/null || true)"
-    for token in $args; do
-      token="${token%\"}"; token="${token#\"}"
-      token="${token##*/}"
-      token="${token%%=*}"
-      if identity="$(identity_for_token "$token")"; then
-        printf '%s' "$identity"
-        return 0
-      fi
-    done
-    while read -r child; do [ -n "$child" ] && queue+=("$child"); done < <(pgrep -P "$pid" 2>/dev/null || true)
-    depth=$((depth + 1))
+    if identity="$(identity_for_argv "$args")"; then
+      printf '%s' "$identity"
+      return 0
+    fi
+    [ "$depth" -lt 5 ] || continue
+
+    while read -r child; do
+      [ -n "$child" ] || continue
+      child_pgid="$(ps -o pgid= -p "$child" 2>/dev/null || true)"
+      child_pgid="${child_pgid//[[:space:]]/}"
+      [ "$child_pgid" = "$foreground_pgid" ] && queue+=("$child:$((depth + 1))")
+    done < <(pgrep -P "$pid" 2>/dev/null || true)
   done
   return 1
 }
@@ -147,7 +219,7 @@ fi
 
 client="${1:-}"
 command -v fzf >/dev/null 2>&1 || {
-  tmux display-message 'tmux-agent-session-manager: fzf is required'
+  tmux display-message 'tmux-agents-manager: fzf is required'
   exit 0
 }
 

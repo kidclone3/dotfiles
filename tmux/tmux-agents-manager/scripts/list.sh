@@ -7,8 +7,8 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$DIR/helpers.sh"
 
 client="${1:-}"
-w="$(get_tmux_option_fallback @agent_popup_width @claude_popup_width '90%')"
-h="$(get_tmux_option_fallback @agent_popup_height @claude_popup_height '90%')"
+w="$(get_tmux_option @agent_popup_width '90%')"
+h="$(get_tmux_option @agent_popup_height '90%')"
 
 if [ -n "${TMUX_POPUP:-}" ]; then
   exec "$DIR/picker.sh" "$client"
