@@ -1,0 +1,94 @@
+# LiteLLM proxy config — Z.AI Coding Plan ($18/mo subscription)
+# Endpoint: https://api.z.ai/api/anthropic  (Anthropic-native /v1/messages)
+#
+# Why the Anthropic endpoint (not OpenAI-compatible):
+#   Z.AI exposes a native Anthropic-shaped API at /api/anthropic. Claude Code
+#   speaks /v1/messages natively, so routing through this endpoint means no
+#   format translation anywhere in the stack — LiteLLM just forwards messages
+#   through. The /v1/responses 404 is gone because nothing in this path calls
+#   the Responses API.
+#
+# Client setup — point Claude Code at this proxy instead of Z.AI directly,
+# keeping spend tracking / fallbacks / logging in the middle:
+#
+#   ~/.claude/settings.json:
+#   {
+#     "env": {
+#       "ANTHROPIC_AUTH_TOKEN": "sk-litellm-local",
+#       "ANTHROPIC_BASE_URL": "http://localhost:4000",
+#       "API_TIMEOUT_MS": "3000000",
+#       "ANTHROPIC_DEFAULT_OPUS_MODEL":   "glm-opus",
+#       "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-sonnet",
+#       "ANTHROPIC_DEFAULT_HAIKU_MODEL":  "glm-haiku"
+#     }
+#   }
+
+model_list:
+  # ── Opus-tier (3× peak quota, 2× off-peak) ────────────────────────
+  - model_name: glm-opus
+    litellm_params:
+      model: anthropic/glm-5.1
+      api_base: https://api.z.ai/api/anthropic
+      api_key: os.environ/ZAI_API_KEY
+      rpm: 60
+
+  - model_name: glm-opus              # failover, same tier
+    litellm_params:
+      model: anthropic/glm-5-turbo
+      api_base: https://api.z.ai/api/anthropic
+      api_key: os.environ/ZAI_API_KEY
+      rpm: 60
+
+  - model_name: glm-opus              # failover, same tier
+    litellm_params:
+      model: anthropic/glm-5
+      api_base: https://api.z.ai/api/anthropic
+      api_key: os.environ/ZAI_API_KEY
+      rpm: 60
+
+  # ── Sonnet-tier (workhorse; 1× quota) ─────────────────────────────
+  - model_name: glm-sonnet
+    litellm_params:
+      model: anthropic/glm-4.7
+      api_base: https://api.z.ai/api/anthropic
+      api_key: os.environ/ZAI_API_KEY
+      rpm: 120
+
+  - model_name: glm-sonnet            # failover
+    litellm_params:
+      model: anthropic/glm-4.6
+      api_base: https://api.z.ai/api/anthropic
+      api_key: os.environ/ZAI_API_KEY
+      rpm: 120
+
+  # ── Haiku-tier (cheap background tasks) ───────────────────────────
+  - model_name: glm-haiku
+    litellm_params:
+      model: anthropic/glm-4.5-air
+      api_base: https://api.z.ai/api/anthropic
+      api_key: os.environ/ZAI_API_KEY
+      rpm: 240
+
+router_settings:
+  routing_strategy: latency-based-routing
+  num_retries: 2
+  timeout: 120
+  allowed_fails: 2
+  cooldown_time: 30
+
+litellm_settings:
+  drop_params: false
+  fallbacks:
+    - glm-opus:   ["glm-sonnet", "glm-haiku"]
+    - glm-sonnet: ["glm-haiku"]
+  context_window_fallbacks:
+    - glm-opus:   ["glm-sonnet"]
+    - glm-sonnet: ["glm-haiku"]
+
+general_settings:
+  master_key: sk-litellm-local
+  disable_spend_logs: true            # ← kills the passthrough cost path
+  disable_error_logs: false           # keep real errors visible
+  success_callback: []
+  failure_callback: []
+  callbacks: []

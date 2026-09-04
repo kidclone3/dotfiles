@@ -5,27 +5,47 @@ vim.cmd("set shiftwidth=2")
 vim.g.mapleader = " "
 
 vim.opt.swapfile = false
+
+local is_ssh = vim.env.SSH_TTY ~= nil or vim.env.SSH_CONNECTION ~= nil
 vim.opt.clipboard = "unnamedplus"
 
--- OSC 52 clipboard provider — sends yanks to the local terminal's clipboard
--- over SSH. Required when editing on a remote server with no X/Wayland display.
-vim.g.clipboard = {
-  name = "OSC 52",
-  copy = {
-    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
-  },
-  paste = {
-    ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
-    ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
-  },
-}
+if is_ssh and vim.env.TMUX == nil then
+  -- OSC 52 clipboard reads are often blocked by terminals. Send copies to the
+  -- terminal, but serve paste from a local cache so reads never block.
+  local osc52 = require("vim.ui.clipboard.osc52")
+  local cache = {
+    ["+"] = { {}, "v" },
+    ["*"] = { {}, "v" },
+  }
 
--- Navigate vim panes better
-vim.keymap.set('n', '<c-k>', ':wincmd k<CR>')
-vim.keymap.set('n', '<c-j>', ':wincmd j<CR>')
-vim.keymap.set('n', '<c-h>', ':wincmd h<CR>')
-vim.keymap.set('n', '<c-l>', ':wincmd l<CR>')
+  local function copy(reg)
+    local send = osc52.copy(reg)
+
+    return function(lines, regtype)
+      cache[reg] = { vim.deepcopy(lines), regtype }
+      send(lines)
+    end
+  end
+
+  local function paste(reg)
+    return function()
+      return vim.deepcopy(cache[reg])
+    end
+  end
+
+  vim.g.clipboard = {
+    name = "OSC 52 (copy only)",
+    copy = {
+      ["+"] = copy("+"),
+      ["*"] = copy("*"),
+    },
+    paste = {
+      ["+"] = paste("+"),
+      ["*"] = paste("*"),
+    },
+  }
+end
+
 
 vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>')
 
@@ -35,7 +55,7 @@ vim.keymap.set('n', 'Q', ':q<CR>')
 vim.keymap.set('n', 'B', ':bd<CR>')
 
 -- ca: copy entire buffer to system clipboard (overrides Vim's ca text-object operator)
-vim.keymap.set('n', 'ca', ':%y<CR>')
+vim.keymap.set('n', 'ca', ':%y+<CR>')
 
 -- N: run :normal across the visual selection (range auto-prepended to '<,'>)
 vim.keymap.set('v', 'N', ':normal ')

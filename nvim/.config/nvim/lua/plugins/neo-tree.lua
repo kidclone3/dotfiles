@@ -34,13 +34,13 @@ return {
 				local node = state.tree:get_node()
 				local name = node.name
 				vim.fn.setreg("+", name)
-				vim.notify("Copied filename: " .. name)
+				vim.notify("已复制文件名：" .. name)
 			end,
 			copy_path_to_clipboard = function(state)
 				local node = state.tree:get_node()
 				local path = node:get_id() -- absolute path
 				vim.fn.setreg("+", path)
-				vim.notify("Copied path: " .. path)
+				vim.notify("已复制路径：" .. path)
 			end,
 		},
 		filesystem = {
