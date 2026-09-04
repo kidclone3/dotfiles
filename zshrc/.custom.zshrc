@@ -14,6 +14,9 @@ alias pc=pycharm
 alias mkpydir='function _mkpydir() { mkdir -p "$1" && touch "$1/__init__.py"; }; _mkpydir'
 
 
+# OMP graphics through tmux in WezTerm.
+export PI_FORCE_IMAGE_PROTOCOL=iterm2
+
 # ===================================================================
 # UV ENVIRONMENT MANAGEMENT
 # ===================================================================

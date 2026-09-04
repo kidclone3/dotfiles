@@ -190,9 +190,6 @@ typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
-# append completions to fpath
-fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
 # initialise completions with ZSH's compinit
 autoload -Uz compinit && compinit
 
@@ -202,6 +199,7 @@ autoload -Uz compinit && compinit
 alias bcheck="acpi -a"
 alias kubed="kubectl -n dev"
 alias tmn="tmux new-session -s \${PWD##*/}"
+alias v="nvim"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -324,7 +322,6 @@ export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 alias claude='TELE_CLAUDE=1 command claude'
 
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
-export TERM=xterm-kitty
 export MDTERM_IMAGE_PROTOCOL=kittyunicode
 export EDITOR=nvim
 
@@ -333,3 +330,7 @@ export PATH="/home/dev/.local/bin:$PATH"
 
 
 export PATH="/usr/lib/wsl/lib:$PATH"
+
+# Activate mise
+eval "$(mise activate zsh)"
+alias cod="codex --dangerously-bypass-approvals-and-sandbox"

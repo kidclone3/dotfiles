@@ -44,11 +44,17 @@ return {
       vim.lsp.enable({ 'tailwindcss', 'ruby_lsp', 'html', 'lua_ls', 'basedpyright' })
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-      -- gd: LSP definition when a server is attached; otherwise fall back to
-      -- Vim's builtin goto-local-declaration (normal! ignores mappings).
+      -- gd: use LSP definition only when an attached server supports it.
       vim.keymap.set('n', 'gd', function()
-        if #vim.lsp.get_clients({ bufnr = 0 }) > 0 then
+        local definition_clients = vim.lsp.get_clients({
+          bufnr = 0,
+          method = 'textDocument/definition',
+        })
+
+        if #definition_clients > 0 then
           vim.lsp.buf.definition()
+        elseif vim.bo.filetype == 'markdown' then
+          vim.cmd('normal! gf')
         else
           vim.cmd('normal! gd')
         end
