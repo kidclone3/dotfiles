@@ -1,4 +1,4 @@
-export ZSH_CUSTOM=$HOME/Documents/tools/dotfiles/oh-my-zsh/.oh-my-zsh/custom
+export ZSH_CUSTOM="$ZSH/custom"
 
 # ===================================================================
 # ALIASES CONFIGURATION

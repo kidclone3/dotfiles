@@ -19,9 +19,12 @@ local function image_backend()
   return "kitty"
 end
 
+-- Prefer a local development checkout when present; otherwise install from GitHub.
+local local_dir = vim.fn.expand("~/Documents/nvim-ext/diagram.nvim")
+
 return {
   "kidclone3/diagram.nvim",
-  dir = vim.fn.expand("~/Documents/nvim-ext/diagram.nvim"),
+  dir = vim.fn.isdirectory(local_dir) == 1 and local_dir or nil,
   dependencies = {
     {
       "3rd/image.nvim",
