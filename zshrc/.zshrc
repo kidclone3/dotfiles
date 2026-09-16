@@ -187,7 +187,11 @@ PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# Homebrew (only if installed)
+for _brew in /home/linuxbrew/.linuxbrew/bin/brew /opt/homebrew/bin/brew; do
+	[[ -x "$_brew" ]] && eval "$("$_brew" shellenv)" && break
+done
+unset _brew
 
 
 # initialise completions with ZSH's compinit
@@ -309,9 +313,9 @@ cc-fix-dupes() {
         echo "✨ No duplicates found!"
     fi
 }
-. "$HOME/.cargo/env"
+[[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
 
-eval "$(zoxide init zsh)"
+command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
 export EDITOR=vim
 
 # Enter the glm-claude nix dev shell
@@ -326,11 +330,12 @@ export MDTERM_IMAGE_PROTOCOL=kittyunicode
 export EDITOR=nvim
 
 # Added by codebase-memory-mcp install
-export PATH="/home/dev/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 
 export PATH="/usr/lib/wsl/lib:$PATH"
 
 # Activate mise
-eval "$(mise activate zsh)"
+command -v mise >/dev/null && eval "$(mise activate zsh)"
 alias cod="codex --dangerously-bypass-approvals-and-sandbox"
+alias lg="lazygit"
