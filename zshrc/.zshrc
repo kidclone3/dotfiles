@@ -112,8 +112,9 @@ export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 
 # Headless launchers can use zsh -i without a terminal. A detached tmux pane
 # temporarily routes stdout through a pipe, while stdin is still its pane PTY.
+# An active p10k instant prompt already verified a TTY and swapped stdio out.
 _zsh_has_prompt_tty=true
-if [[ ! -t 0 || ! -t 1 ]]; then
+if (( ! ${+__p9k_instant_prompt_active} )) && [[ ! -t 0 || ! -t 1 ]]; then
     if [[ -z $TMUX || $(readlink /proc/self/fd/0) != /dev/pts/* ]]; then
         _zsh_has_prompt_tty=false
     fi
