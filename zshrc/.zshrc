@@ -241,6 +241,9 @@ alias v="nvim"
 # Load custom zsh configuration
 . ~/.custom.zshrc
 
+# Machine-local config that must not be in this public repo
+[ -f ~/.zshrc.private ] && . ~/.zshrc.private
+
 # ccg - Claude Code with GLM config (credentials scoped to this command only)
 function ccg() {
     (
@@ -268,8 +271,6 @@ alias ccu='CLAUDE_CONFIG_DIR="$HOME/.claude,$HOME/.claude-glm" npx ccusage@lates
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-
-alias claude-mem='$HOME/.bun/bin/bun "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
 
 # opencode
 export PATH=$HOME/.opencode/bin:$PATH
